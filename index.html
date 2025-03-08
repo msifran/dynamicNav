@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dummy navbar</title>
+</head>
+<style>
+    .navbar {
+        display: flex;
+        justify-content: space-around;
+        list-style-type: none;
+    }
+</style>
+<body>
+    <nav >
+    <ul class="navbar" id="lists">
+        
+    </ul>
+    </nav>
+    
+
+</body>
+<script>
+
+
+    fetch('https://ecomm.dotvik.com/v2kart/service/categories/mainCategories') 
+ .then(response => response.json())
+  .then(res => {
+    let length = (res.data).length;
+    const ul = document.getElementById('lists');
+    function MainData(){
+        
+    }
+    console.log((res.data).length);
+   for( let i=0 ; i<res.data.length; i++){
+    fetch(`https://ecomm.dotvik.com/v2kart/service/categories/${res.data[i].urlKey}/tree`)
+  .then(response => response.json())
+  .then(mydata => {
+    
+  })
+    let li = document.createElement('li');
+    li.innerHTML=res.data[i].categoryName;
+    ul.appendChild(li);  
+   }
+})
+  .catch(error => console.error ('Error:', error));
+
+</script>
+</html>
