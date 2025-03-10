@@ -22,29 +22,55 @@
 
 </body>
 <script>
+let ourData
 
+fetch('https://ecomm.dotvik.com/v2kart/service/categories/mainCategories') 
+    .then(response => response.json())
+    .then(res => {
+        ourData = res.data;
+        mainData(ourData);
+       
 
-    fetch('https://ecomm.dotvik.com/v2kart/service/categories/mainCategories') 
- .then(response => response.json())
-  .then(res => {
-    let length = (res.data).length;
-    const ul = document.getElementById('lists');
-    function MainData(){
-        
-    }
-    console.log((res.data).length);
-   for( let i=0 ; i<res.data.length; i++){
-    fetch(`https://ecomm.dotvik.com/v2kart/service/categories/${res.data[i].urlKey}/tree`)
-  .then(response => response.json())
-  .then(mydata => {
-    
-  })
-    let li = document.createElement('li');
-    li.innerHTML=res.data[i].categoryName;
-    ul.appendChild(li);  
-   }
 })
   .catch(error => console.error ('Error:', error));
+ 
+
+let index =0 ;
+  function mainData(ourData ) {
+            if ( ourData.length <= index) {
+                return ;
+            }
+            let categoryName = ourData[index].categoryName;
+            console.log("main category " + categoryName);
+            let key = ourData[index].urlKey;
+           
+          innerData (key );
+
+       
+        }
+
+  function innerData ( key ){
+        fetch(`https://ecomm.dotvik.com/v2kart/service/categories/${key}/tree`)
+.then(response => response.json())
+.then(mydata => {
+      let len =(mydata.data.subCategory).length;
+      
+      if(mydata.data && mydata.data.subCategory){
+        mydata.data.subCategory.forEach((e,i) => {
+          console.log("category name and index",e.categoryName,i);
+        });
+        console.log(mydata.data.subCategory);
+      }
+      
+      index ++;
+      mainData( ourData) ;
+})
+
+
+}
+
+
 
 </script>
 </html>
+
