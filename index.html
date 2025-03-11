@@ -10,10 +10,31 @@
         display: flex;
         justify-content: space-around;
         list-style-type: none;
+        position: static;
+        
+      margin: 0;
+      padding: 0;
+       
     }
-    .navbar>li>li{
-      background-color: green;
-      /* display: none; */
+    #okay{
+      margin: 0;
+      padding: 0px;
+      display: flex;
+    width: 100%;
+    position: absolute;
+    left:0;
+    margin: 0px 20px;
+    }
+    #okay  li {
+      display: flex;
+    background-color: red;
+    list-style-type: none;
+    display: none;
+    width: 100%;
+    height: auto;
+    }
+    .navbar :hover  #okay li{
+      display: block;
     }
 
     
@@ -67,26 +88,39 @@ let index =0 ;
 
       if(mydata.data && mydata.data.subCategory){
         let innerlist =document.createElement('ul');
-        innerlist.classList.add("inner-list"); // inner list adding class for it 
-        innerlist.id="inner-list-data";
+         innerlist.setAttribute('id',"okay");
+
         mydata.data.subCategory.forEach((e,i) => {
 
           console.log("category name and index",e.categoryName,i);
           let innerli = document.createElement('li');
+
           innerli.appendChild(document.createTextNode(e.categoryName));
-          list.appendChild(innerli);
+          innerlist.appendChild(innerli);
+          list.appendChild(innerlist);
           let eys =   e.id;
-          nestedData(eys);
-         
-        });
+          nestedData(eys , innerli);
+          
+        }
+      );
+        
       }
       
-function nestedData (eys){
+function nestedData (eys , innerli){
   mydata.data.childCategory.forEach((e)=>{
+   
+
     let fkey = e.parentId;
     if(fkey == eys ){
+      let nestedli = document.createElement('li');
       console.log(e.categoryName);
+      nestedli.appendChild(document.createTextNode(e.categoryName));
+     
+      
+
+      innerli.appendChild(nestedli);
     }
+
     
   });
 }      
