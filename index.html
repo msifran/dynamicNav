@@ -11,6 +11,12 @@
         justify-content: space-around;
         list-style-type: none;
     }
+    .navbar>li>li{
+      background-color: green;
+      /* display: none; */
+    }
+
+    
 </style>
 <body>
     <nav >
@@ -44,30 +50,53 @@ let index =0 ;
             console.log("main category " + categoryName);
             let key = ourData[index].urlKey;
            
-          innerData (key );
-
+            let list = document.createElement('li');
+            list.appendChild(document.createTextNode(categoryName));
+            document.getElementById('lists').appendChild(list);
+            
+          innerData (key , list );
+            
        
         }
 
-  function innerData ( key ){
+  function innerData ( key ,list ){
         fetch(`https://ecomm.dotvik.com/v2kart/service/categories/${key}/tree`)
 .then(response => response.json())
 .then(mydata => {
-      let len =(mydata.data.subCategory).length;
-      
+
+
       if(mydata.data && mydata.data.subCategory){
+        let innerlist =document.createElement('ul');
+        innerlist.classList.add("inner-list"); // inner list adding class for it 
+        innerlist.id="inner-list-data";
         mydata.data.subCategory.forEach((e,i) => {
+
           console.log("category name and index",e.categoryName,i);
+          let innerli = document.createElement('li');
+          innerli.appendChild(document.createTextNode(e.categoryName));
+          list.appendChild(innerli);
+          let eys =   e.id;
+          nestedData(eys);
+         
         });
-        console.log(mydata.data.subCategory);
       }
       
+function nestedData (eys){
+  mydata.data.childCategory.forEach((e)=>{
+    let fkey = e.parentId;
+    if(fkey == eys ){
+      console.log(e.categoryName);
+    }
+    
+  });
+}      
       index ++;
       mainData( ourData) ;
 })
 
 
 }
+
 
 
 
