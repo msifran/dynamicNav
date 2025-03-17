@@ -16,25 +16,44 @@
       padding: 0;
        
     }
-    #okay{
+    .navbar a {
+      text-decoration: none ;
+    }
+    #okay {
       margin: 0;
-      padding: 0px;
-      display: flex;
+      padding: 0;
+    
     width: 100%;
     position: absolute;
     left:0;
-    margin: 0px 20px;
-    }
-    #okay  li {
-      display: flex;
-    background-color: red;
     list-style-type: none;
+    margin: 0px 20px;
+    background-color: grey;
     display: none;
+    
+    }
+    #okay div {
+      margin: 40px 50px;
+    }
+    #okay div>a{
+     color: red;
+     font-weight: 600;
+     padding: 40px 0px;
+     text-decoration: none;
+    }
+
+    #okay div ul  {
+      list-style-type: none;
     width: 100%;
     height: auto;
+    margin: 0;
+    padding: 0;
     }
-    .navbar :hover  #okay li{
-      display: block;
+    #okay div ul li {
+      margin: 10px;
+    }
+    .navbar :hover  #okay {
+      display:flex;
     }
 
     
@@ -42,14 +61,11 @@
 <body>
     <nav >
     <ul class="navbar" id="lists">
-        
     </ul>
     </nav>
-    
-
 </body>
 <script>
-let ourData
+
 
 fetch('https://ecomm.dotvik.com/v2kart/service/categories/mainCategories') 
     .then(response => response.json())
@@ -68,16 +84,24 @@ let index =0 ;
                 return ;
             }
             let categoryName = ourData[index].categoryName;
-            console.log("main category " + categoryName);
             let key = ourData[index].urlKey;
-           
+            console.log("main category " + categoryName);
+          
+
             let list = document.createElement('li');
-            list.appendChild(document.createTextNode(categoryName));
+            let atag = document.createElement('a');
+            let div = document.createElement('div');
+            div.setAttribute('id','okay');
+            atag.appendChild(document.createTextNode(categoryName));
+           atag.href=`https://ecomm.dotvik.com/mainCategory.html?Category_UrlKey=${key}&Category_SearchTitle=${categoryName}&page_Num=1`;
+          
+            list.appendChild(atag);
+            list.appendChild(div);
             document.getElementById('lists').appendChild(list);
             
-          innerData (key , list );
-            
-       
+        
+          innerData (key , div );
+    
         }
 
   function innerData ( key ,list ){
@@ -87,19 +111,20 @@ let index =0 ;
 
 
       if(mydata.data && mydata.data.subCategory){
-        let innerlist =document.createElement('ul');
-         innerlist.setAttribute('id',"okay");
 
         mydata.data.subCategory.forEach((e,i) => {
-
+          let div = document.createElement('div');
+        let innerlist =document.createElement('ul');
+          let atag = document.createElement('a');
           console.log("category name and index",e.categoryName,i);
-          let innerli = document.createElement('li');
-
-          innerli.appendChild(document.createTextNode(e.categoryName));
-          innerlist.appendChild(innerli);
-          list.appendChild(innerlist);
+          atag.appendChild(document.createTextNode(e.categoryName));
+          atag.href=`https://ecomm.dotvik.com/category.html?q=*&categoryUrlKeys=${e.urlKey}`;
+          div.appendChild(atag);
+          div.appendChild(innerlist);
+          list.appendChild(div);
+         
           let eys =   e.id;
-          nestedData(eys , innerli);
+          nestedData(eys , innerlist);
           
         }
       );
@@ -108,16 +133,15 @@ let index =0 ;
       
 function nestedData (eys , innerli){
   mydata.data.childCategory.forEach((e)=>{
-   
-
     let fkey = e.parentId;
     if(fkey == eys ){
+      
       let nestedli = document.createElement('li');
       console.log(e.categoryName);
-      nestedli.appendChild(document.createTextNode(e.categoryName));
-     
-      
-
+      let atag = document.createElement('a');
+      atag.href=`https://ecomm.dotvik.com/category.html?q=*&categoryUrlKeys=${e.urlKey}`;
+      atag.appendChild(document.createTextNode(e.categoryName));
+      nestedli.appendChild(atag);
       innerli.appendChild(nestedli);
     }
 
