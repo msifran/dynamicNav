@@ -1,76 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dummy navbar</title>
-</head>
-<style>
-    .navbar {
-        display: flex;
-        justify-content: space-around;
-        list-style-type: none;
-        position: static;
-        
-      margin: 0;
-      padding: 0;
-       
-    }
-    .navbar a {
-      text-decoration: none ;
-    }
-    #okay {
-      margin: 0;
-      padding: 0;
-    
-    width: 100%;
-    position: absolute;
-    left:0;
-    list-style-type: none;
-    margin: 0px 20px;
-    background-color: grey;
-    display: none;
-    
-    }
-    #okay div {
-      margin: 40px 50px;
-    }
-    #okay div>a{
-     color: red;
-     font-weight: 600;
-     padding: 40px 0px;
-     text-decoration: none;
-    }
-
-    #okay div ul  {
-      list-style-type: none;
-    width: 100%;
-    height: auto;
-    margin: 0;
-    padding: 0;
-    }
-    #okay div ul li {
-      margin: 10px;
-    }
-    .navbar :hover  #okay {
-      display:flex;
-    }
-
-    
-</style>
-<body>
-    <nav >
-    <ul class="navbar" id="lists">
-    </ul>
-    </nav>
-</body>
-<script>
 
 
 fetch('https://ecomm.dotvik.com/v2kart/service/categories/mainCategories') 
     .then(response => response.json())
     .then(res => {
         ourData = res.data;
+
+        
         mainData(ourData);
        
 
@@ -93,11 +28,14 @@ let index =0 ;
             let div = document.createElement('div');
             div.setAttribute('id','okay');
             atag.appendChild(document.createTextNode(categoryName));
-           atag.href=`https://ecomm.dotvik.com/mainCategory.html?Category_UrlKey=${key}&Category_SearchTitle=${categoryName}&page_Num=1`;
+           atag.href=`mainCategory.html?Category_UrlKey=${key}&Category_SearchTitle=${categoryName}&page_Num=1`;
           
+
+
             list.appendChild(atag);
             list.appendChild(div);
             document.getElementById('lists').appendChild(list);
+
             
         
           innerData (key , div );
@@ -118,7 +56,7 @@ let index =0 ;
           let atag = document.createElement('a');
           console.log("category name and index",e.categoryName,i);
           atag.appendChild(document.createTextNode(e.categoryName));
-          atag.href=`https://ecomm.dotvik.com/category.html?q=*&categoryUrlKeys=${e.urlKey}`;
+          atag.href=`subcategory.html?q=*&categoryUrlKeys=${e.urlKey}`;
           div.appendChild(atag);
           div.appendChild(innerlist);
           list.appendChild(div);
@@ -139,25 +77,15 @@ function nestedData (eys , innerli){
       let nestedli = document.createElement('li');
       console.log(e.categoryName);
       let atag = document.createElement('a');
-      atag.href=`https://ecomm.dotvik.com/category.html?q=*&categoryUrlKeys=${e.urlKey}`;
+      atag.href=`lastCategory.html?q=*&categoryUrlKeys=${e.urlKey}`;
       atag.appendChild(document.createTextNode(e.categoryName));
       nestedli.appendChild(atag);
       innerli.appendChild(nestedli);
+     
     }
-
-    
   });
 }      
       index ++;
       mainData( ourData) ;
 })
-
-
 }
-
-
-
-
-</script>
-</html>
-

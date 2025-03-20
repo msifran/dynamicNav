@@ -1,0 +1,50 @@
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    position: static;
+    
+  margin: 0;
+  padding: 0;
+   
+}
+
+.navbar a {
+  text-decoration: none ;
+}
+#okay {
+  margin: 0;
+  padding: 0;
+z-index: 10;
+width: 100%;
+position: absolute;
+left:0;
+list-style-type: none;
+margin: 0px 20px;
+background-color: grey;
+display: none;
+
+}
+#okay div {
+  margin: 40px 50px;
+}
+#okay div>a{
+ color: red;
+ font-weight: 600;
+ padding: 40px 0px;
+ text-decoration: none;
+}
+
+#okay div ul  {
+  list-style-type: none;
+width: 100%;
+height: auto;
+margin: 0;
+padding: 0;
+}
+#okay div ul li {
+  margin: 10px;
+}
+.navbar :hover  #okay {
+  display:flex;
+}

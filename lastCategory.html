@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="nav.js"></script>
+    <link rel="stylesheet" href="nav.css">
+</head>
+<style>
+  #boxes{
+    border: 2px solid grey ;
+    margin: 10px ;
+    padding: 10px ;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+  }
+  #boxes>div {
+    border: 2px solid yellow;
+    width: 180px ;
+    height:200px  ;
+    margin: 10px ;
+    position: relative;
+  }
+  #div1 {
+    border: 2px solid rgb(48, 8, 73);
+    width: auto  ;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    /* position: relative; */
+  }
+  .desc {
+    height: 20%;
+   width: 160px;
+    margin: 10px ;
+    border: 2px solid black ;
+    position: absolute;
+    bottom: 0;
+   
+   
+  }
+  .check{
+    width:160px  ;
+    height: 60%;
+    position: relative;
+    padding: 10px;
+    margin: 5px 0px;
+  }
+</style>
+<body>
+  <nav >
+    <ul class="navbar" id="lists">
+    </ul>
+   </nav>
+   
+    <div id="boxes">
+
+    </div>
+    
+
+  
+</body>
+<script>
+    let b=[];
+
+      const paramsString = window.location.search;
+const searchParams = new URLSearchParams(paramsString);
+for (const p of searchParams) {
+  
+  b.push(p);
+}
+console.log(b);
+let res = b[1];
+let urlkey = res[1];
+
+
+fetch(`https://ecomm.dotvik.com/v2kart/service/solr/search?q=*&categoryUrlKeys=${urlkey}&rows=24&is_color_variant=true
+ `) 
+    .then(response => response.json())
+    .then(output => {
+      result = output.response.docs;
+        console.log(result);
+       for( let i =0 ; i< result.length ; i++){
+       
+        let thi=result[i].metaTitle;
+        let pic = result [i].galleryUrls[0];
+    
+        divBox(thi , pic );
+       }
+       
+})
+  .catch(error => console.error ('Error:', error));
+
+function divBox(thi, pic ){
+        let div = document.createElement('div');
+        document.getElementById('boxes').appendChild(div);
+        div.setAttribute('id','box');
+          div.innerHTML=`
+          <img class="check"src='https://ecomm.dotvik.com/v2kart/service/${pic}' >
+          <div class = 'desc' >${thi} </div>
+          `;
+      
+
+    
+    
+}
+
+</script>
+</html>
