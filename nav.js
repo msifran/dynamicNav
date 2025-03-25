@@ -1,12 +1,18 @@
 
 
+sessionStorage.setItem("lastname", "Smith");
+let personName = sessionStorage.getItem("lastname");
+console.log(personName);
+
 fetch('https://ecomm.dotvik.com/v2kart/service/categories/mainCategories') 
     .then(response => response.json())
     .then(res => {
         ourData = res.data;
 
-        
-        mainData(ourData);
+        sessionStorage.setItem("ourData", JSON.stringify(ourData));
+        let NewourData =  sessionStorage.getItem("ourData");
+        mainData(NewourData);
+
        
 
 })
@@ -18,9 +24,11 @@ let index =0 ;
             if ( ourData.length <= index) {
                 return ;
             }
+
             let categoryName = ourData[index].categoryName;
+
             let key = ourData[index].urlKey;
-            console.log("main category " + categoryName);
+            // console.log("main category " + categoryName);
           
 
             let list = document.createElement('li');
@@ -30,7 +38,7 @@ let index =0 ;
             atag.appendChild(document.createTextNode(categoryName));
            atag.href=`mainCategory.html?Category_UrlKey=${key}&Category_SearchTitle=${categoryName}&page_Num=1`;
           
-
+            console.log(key);
 
             list.appendChild(atag);
             list.appendChild(div);
@@ -47,14 +55,19 @@ let index =0 ;
 .then(response => response.json())
 .then(mydata => {
 
+  let confirmationData= mydata.data;
+     console.log(confirmationData);
+      sessionStorage.setItem("SubcategoriesData", JSON.stringify(confirmationData));
+      let newmyData =  sessionStorage.getItem("SubcategoriesData");
+      
 
-      if(mydata.data && mydata.data.subCategory){
+      if(newmyData && newmyData.subCategory){
 
-        mydata.data.subCategory.forEach((e,i) => {
+        newmyData.subCategory.forEach((e,i) => {
           let div = document.createElement('div');
         let innerlist =document.createElement('ul');
           let atag = document.createElement('a');
-          console.log("category name and index",e.categoryName,i);
+          // console.log("category name and index",e.categoryName,i);
           atag.appendChild(document.createTextNode(e.categoryName));
           atag.href=`subcategory.html?q=*&categoryUrlKeys=${e.urlKey}`;
           div.appendChild(atag);
@@ -70,12 +83,12 @@ let index =0 ;
       }
       
 function nestedData (eys , innerli){
-  mydata.data.childCategory.forEach((e)=>{
+  newmyData.childCategory.forEach((e)=>{
     let fkey = e.parentId;
     if(fkey == eys ){
       
       let nestedli = document.createElement('li');
-      console.log(e.categoryName);
+      // console.log(e.categoryName);
       let atag = document.createElement('a');
       atag.href=`lastCategory.html?q=*&categoryUrlKeys=${e.urlKey}`;
       atag.appendChild(document.createTextNode(e.categoryName));
@@ -85,6 +98,7 @@ function nestedData (eys , innerli){
     }
   });
 }      
+
       index ++;
       mainData( ourData) ;
 })
