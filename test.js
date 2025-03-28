@@ -19,52 +19,51 @@ if(confirmation){
         mainCategories = res.data; 
         sessionStorage.setItem("mainCategories",JSON.stringify(mainCategories));
         console.log('Main Categories from API:', mainCategories);
-        return mainCat(); 
+        mainCat();
     })
-    .then(() => {
-        CreateMainList(); 
-    })
-    .catch(error => console.error ('Error:', error));
+    .catch(error => console.error('Error:', error));
 }
 
 function mainCat(){
-    return new Promise((resolve, reject) => {
-        let index = 0;
-        function fetchNextCategory() {
-            if (index >= mainCategories.length) {
-                sessionStorage.setItem("AllData", JSON.stringify(main));
-                AllData = main; // Set AllData after all fetches are complete
-                console.log('All data fetched and stored');
-                resolve();
-                return;
-            }
-            
-            const urlkey = mainCategories[index].urlKey;
-            fetch(`https://ecomm.dotvik.com/v2kart/service/categories/${urlkey}/tree`)
-                .then(response => response.json())
-                .then(sub => {
-                    main[urlkey] = sub.data;
-                    console.log(`Fetched data for ${urlkey}`);
-                    index++;
-                    fetchNextCategory();
-                })
-
+    let index = 0;
+    function fetchNextCategory() {
+        if (index >= mainCategories.length) {
+            sessionStorage.setItem("AllData", JSON.stringify(main));
+            AllData = main;
+            console.log('All data fetched and stored');
+            CreateMainList();
+            return;
         }
         
-        fetchNextCategory();
-    });
+        const urlkey = mainCategories[index].urlKey;
+        fetch(`https://ecomm.dotvik.com/v2kart/service/categories/${urlkey}/tree`)
+            .then(response => response.json())
+            .then(sub => {
+                main[urlkey] = sub.data;
+                console.log(`Fetched data for ${urlkey}`);
+                index++;
+                fetchNextCategory();
+            })
+            .catch(error => {
+                console.error(`Error fetching ${urlkey}:`, error);
+                index++;
+                fetchNextCategory();
+            });
+    }
+    
+    fetchNextCategory();
 }
-function availableData (){
-   console.log("Data is aVAIALBLE ");
-   console.log(AllData);
-   console.log(mainCategories);
 
-   CreateMainList()
+function availableData(){
+    console.log("Data is AVAILABLE");
+    console.log(AllData);
+    console.log(mainCategories);
+    CreateMainList();
 }
 
 function CreateMainList(){
     let mainUL = document.getElementById('check');
-   
+    mainUL.innerHTML = ''; 
 
     if (mainCategories && mainCategories.length > 0) {
         mainCategories.forEach(e => {
@@ -73,11 +72,11 @@ function CreateMainList(){
                 div.setAttribute("id", "mainDiv");
                 let mainLi = document.createElement('li');
                 let atag = document.createElement('a');
+                atag.href=`mainCategory.html?q=*&categoryUrlKeys=${e.urlKey}`;
                 atag.appendChild(document.createTextNode(e.categoryName));
                 mainLi.appendChild(atag);
                 mainLi.appendChild(div);
                 mainUL.appendChild(mainLi);
-                
                 CreateSubList(e.urlKey);
             }
         });
@@ -86,12 +85,15 @@ function CreateMainList(){
 
 function CreateSubList(y){
     let subUL = document.createElement('ul');
-    
+    let x= AllData[y].subCategory;
+    console.log(x);
     if (AllData[y] && AllData[y].subCategory) {
+        console.log("asde")
         AllData[y].subCategory.forEach((sub) => {
             let div = document.createElement('div');
             let subLI = document.createElement('li');
             let atag = document.createElement('a');
+            atag.href=`subCategory.html?q=*&categoryUrlKeys=${sub.urlKey}`;
             atag.appendChild(document.createTextNode(sub.categoryName));
             subLI.appendChild(atag);
             subLI.appendChild(div);
@@ -118,6 +120,7 @@ function CreateChildlist(urlKey, subUrlKey, parentDiv){
                 if (child.parentId === subUrlKey) {
                     let childLI = document.createElement('li'); 
                     let childLink = document.createElement('a');  
+                    childLink.href=`childCategory.html?q=*&categoryUrlKeys=${child.urlKey}`;
                     childLink.appendChild(document.createTextNode(child.categoryName));  
               
                     childLI.appendChild(childLink);
